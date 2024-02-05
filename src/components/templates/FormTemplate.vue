@@ -1,4 +1,6 @@
 <script setup>
+import TextButton from "@/components/UI/TextButton.vue";
+
 defineProps({
   formTitle: {
     type: String
@@ -19,12 +21,11 @@ defineEmits(['onSubmit'])
       {{formTitle}}
     </div>
     <slot name="content"/>
-    <button
+    <TextButton
         type="submit"
         class="user-form__button"
-    >
-      {{ buttonLabel }}
-    </button>
+        :button-label="buttonLabel"
+    />
   </form>
 </template>
 
@@ -50,14 +51,15 @@ defineEmits(['onSubmit'])
   padding: 5px 15px;
   border-radius: 5px;
   background: $COLOR_FONT_MAIN_LIGHT;
-  color: white;
+  color: $COLOR_MAIN_LIGHT;
   font-family: $FONT_MAIN;
   font-size: 12px;
   cursor: pointer;
   transition: .2s ease;
-
-  &:hover {
-    background: darken($COLOR_FONT_MAIN_LIGHT, 10%);
+  @media #{$MOUSE_DEVICE} {
+    &:hover {
+      background: darken($COLOR_FONT_MAIN_LIGHT, 10%);
+    }
   }
 }
 
