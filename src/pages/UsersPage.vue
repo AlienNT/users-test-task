@@ -158,7 +158,7 @@ const isShowForm = ref(false)
     max-height: 100vh;
     flex-wrap: wrap;
 
-    @media all and (max-width: 768px) {
+    @media #{$BREAKPOINT} {
       padding: 0;
       height: calc(100% - 80px);
     }
@@ -175,7 +175,7 @@ const isShowForm = ref(false)
   z-index: 3;
   flex: 1 1 40%;
 
-  @media all and (max-width: 768px) {
+  @media #{$BREAKPOINT} {
     position: absolute;
     left: 0;
     bottom: 0;
@@ -206,7 +206,7 @@ const isShowForm = ref(false)
 }
 
 .button-wrapper {
-  @media all and (max-width: 768px) {
+  @media #{$BREAKPOINT} {
     height: 70px;
     display: flex;
     flex: 100%;
