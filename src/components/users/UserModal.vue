@@ -6,6 +6,7 @@ import UserEmail from "@/components/users/fields/UserEmail.vue";
 import UserFirstName from "@/components/users/fields/UserFirstName.vue";
 import UserLastName from "@/components/users/fields/UserLastName.vue";
 import ModalTemplate from "@/components/templates/ModalTemplate.vue";
+
 import {computed} from "vue";
 
 const emit = defineEmits(['ok', 'cancel'])
@@ -79,8 +80,10 @@ const displayedInitials = computed(() => [
 
 .user-first-name,
 .user-last-name {
-  &:hover {
-    color: $COLOR_FONT_MAIN;
+  @media #{$MOUSE_DEVICE} {
+    &:hover {
+      color: $COLOR_FONT_MAIN;
+    }
   }
 }
 
