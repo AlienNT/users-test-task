@@ -103,7 +103,7 @@ img {
 }
 
 .initial {
-  color: #f3f3f3;
+  color: $COLOR_MAIN_LIGHT;
   background: rgb(102, 151, 212);
   flex: 1;
   display: flex;
