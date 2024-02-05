@@ -46,7 +46,7 @@ const {isShow} = useModal()
 }
 
 .modal-content {
-  background: #f3f3f3;
+  background: $COLOR_MAIN_LIGHT;
   min-width: 280px;
   min-height: 160px;
   border-radius: 5px;
