@@ -19,16 +19,16 @@ defineProps({
 </template>
 
 <style scoped lang="scss">
-$color: #3a77bd;
 .user-list-email {
   font-family: $FONT_MAIN;
-  color: $color;
+  color: $COLOR_FONT_MAIN_LIGHT;
   text-decoration: none;
   transition: .2s ease;
   font-weight: 500;
-
-  &:hover {
-    color: lighten($color, 15%);
+  @media #{$MOUSE_DEVICE} {
+    &:hover {
+      color: lighten($COLOR_FONT_MAIN_LIGHT, 15%);
+    }
   }
 }
 </style>
