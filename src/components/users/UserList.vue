@@ -43,7 +43,7 @@ defineEmits(['onDelete', 'onShowDetails'])
 .empty-list {
   font-size: 16px;
   font-family: $FONT_MAIN;
-  color: #f3f3f3;
+  color: $COLOR_MAIN_LIGHT;
   font-weight: 700;
   display: flex;
   align-self: center;
