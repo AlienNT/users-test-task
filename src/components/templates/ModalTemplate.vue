@@ -53,5 +53,6 @@ const {isShow} = useModal()
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   padding: 25px;
   display: flex;
+  flex-direction: column;
 }
 </style>
