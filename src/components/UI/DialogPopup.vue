@@ -1,7 +1,9 @@
 <script setup>
 import ModalTemplate from "@/components/templates/ModalTemplate.vue";
+import TextButton from "@/components/UI/TextButton.vue";
+import TextField from "@/components/UI/TextField.vue";
 
-const props = defineProps({
+defineProps({
   data: {
     type: Object
   }
@@ -16,24 +18,21 @@ const emit = defineEmits(['cancel', 'ok'])
   >
     <template v-slot:content>
       <div class="modal-field-wrapper">
-        <div class="title">
-          {{ data?.title }}
-        </div>
+        <TextField
+            :value="data?.title"
+            class="title"
+        />
         <div class="button-wrapper">
-          <button
-              class="button"
-              type="button"
-              @click="emit('ok')"
-          >
-            Удалить
-          </button>
-          <button
-              class="button"
-              type="button"
-              @click="emit('cancel')"
-          >
-            Отменить
-          </button>
+          <TextButton
+              button-label="Удалить"
+              is-light
+              @on-click="emit('ok')"
+          />
+          <TextButton
+              button-label="Отменить"
+              is-dark
+              @on-click="emit('cancel')"
+          />
         </div>
       </div>
     </template>
@@ -46,6 +45,7 @@ const emit = defineEmits(['cancel', 'ok'])
   flex-direction: column;
   justify-content: space-between;
 }
+
 .title {
   font-family: $FONT_MAIN;
   color: $COLOR_FONT_MAIN;
