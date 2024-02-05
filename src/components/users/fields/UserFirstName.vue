@@ -21,9 +21,10 @@ defineProps({
   transition: .2s ease;
   padding: 10px 0;
   word-break: break-all;
-
-  &:hover {
-    color: lighten($COLOR_FONT_MAIN, 15%);
+  @media #{$MOUSE_DEVICE} {
+    &:hover {
+      color: lighten($COLOR_FONT_MAIN, 15%);
+    }
   }
 }
 </style>
