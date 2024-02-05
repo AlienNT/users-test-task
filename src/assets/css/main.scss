@@ -33,8 +33,9 @@
   cursor: pointer;
   transition: .2s ease;
   padding: 10px 0;
-
-  &:hover {
-    color: lighten($COLOR_FONT_MAIN, 15%);
+  @media #{$MOUSE_DEVICE} {
+    &:hover {
+      color: lighten($COLOR_FONT_MAIN, 15%);
+    }
   }
 }
