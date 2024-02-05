@@ -1,0 +1,14 @@
+@import "variables";
+* {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $COLOR_BG_MAIN;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: lighten($COLOR_FONT_MAIN, 10%);
+  }
+}
