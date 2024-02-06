@@ -50,6 +50,7 @@ const classList = computed(() => [
   display: block;
   border-radius: 5px;
   transition: .2s ease;
+  cursor: pointer;
 }
 
 .light {

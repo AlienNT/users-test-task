@@ -1,5 +1,5 @@
 <script setup>
-import IconButton from "@/components/UI/IconButton.vue";
+import IconButton from "@/components/UI/buttons/IconButton.vue";
 import icons from "@/helpers/icons.js";
 
 defineProps({

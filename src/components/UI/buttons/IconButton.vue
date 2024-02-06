@@ -38,6 +38,11 @@ const style = computed(() => [
   props.height ? `height: ${props.height}px` : '',
   props.color ? `background-color: ${hovered.value && props.hoverColor ? props.hoverColor : props.color}` : '',
 ].join('; '))
+
+function onClick(e) {
+  e.target.blur()
+  emit('onClick')
+}
 </script>
 
 <template>
@@ -46,7 +51,7 @@ const style = computed(() => [
       :type="type"
       :title="title"
       :style="style"
-      @click="emit('onClick')"
+      @click="onClick"
       @mouseenter="hovered = true"
       @mouseleave="hovered = false"
   />
@@ -60,5 +65,8 @@ const style = computed(() => [
   mask-repeat: no-repeat;
   mask-size: contain;
   cursor: pointer;
+  tab-index: -1;
+  user-focus: none;
+  user-select: none;
 }
 </style>
