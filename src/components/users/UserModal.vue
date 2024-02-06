@@ -1,60 +1,90 @@
 <script setup>
 import userFields from "@/helpers/userFields.js";
+import {computed, onBeforeUnmount} from "vue";
 
-import UserAvatar from "@/components/users/fields/UserAvatar.vue";
-import UserEmail from "@/components/users/fields/UserEmail.vue";
-import UserFirstName from "@/components/users/fields/UserFirstName.vue";
-import UserLastName from "@/components/users/fields/UserLastName.vue";
 import ModalTemplate from "@/components/templates/ModalTemplate.vue";
+import UserEditForm from "@/components/users/UserEditForm.vue";
+import TextButton from "@/components/UI/buttons/TextButton.vue";
+import FilePicker from "@/components/UI/FilePicker.vue";
 
-import {computed} from "vue";
-
-const emit = defineEmits(['ok', 'cancel'])
+import {getInitials} from "@/helpers/index.js";
+import {useUserState} from "@/composables/state/useUserState.js";
+import {useUserRequest} from "@/composables/api/useUserRequest.js";
 
 const props = defineProps({
   data: {
     type: Object
   }
 })
-const displayedInitials = computed(() => [
-  props.data?.[userFields.FIRST_NAME.name] ? props.data?.[userFields.FIRST_NAME.name][0].toUpperCase() : '',
-  props.data?.[userFields.LAST_NAME.name] ? props.data?.[userFields.LAST_NAME.name][0].toUpperCase() : ''
-].join(' '))
+
+const emit = defineEmits([
+  'ok',
+  'cancel'
+])
+
+const {user, currentUserId, setUserId, isEdit, setIsEdit} = useUserState()
+const {patchUser} = useUserRequest()
+
+const editedUser = computed(() => {
+  return user(currentUserId.value).value
+})
+
+const displayedInitials = computed(() => {
+  return getInitials(
+      props.data?.[userFields.FIRST_NAME.name],
+      props.data?.[userFields.LAST_NAME.name]
+  )?.join(' ')
+})
+
+function onUpdate(e) {
+  patchUser(currentUserId.value, e).then(() => {
+    setIsEdit(null)
+  })
+}
+
+const isReadonly = computed(() => {
+  return !isEdit.value
+})
+
+const buttonLabel = computed(() => {
+  return isEdit.value ? 'Отменить' : 'Редактировать'
+})
+
+function onPickImage(e) {
+  editedUser.value.avatar = e.file
+}
+
+onBeforeUnmount(() => {
+  setIsEdit(null)
+  setUserId(null)
+})
 </script>
 
 <template>
   <ModalTemplate
       @cancel="emit('cancel')"
-      @ok="emit('ok')"
   >
     <template v-slot:content>
-      <UserAvatar
-          class="user-avatar"
-          :src="data?.[userFields.AVATAR.name]"
-          :font-size="36"
-          :initial="displayedInitials"
-      />
-      <div class="user-name">
-        <UserFirstName
-            class="user-first-name"
-            :value="data?.[userFields.FIRST_NAME.name]"
+      <div class="modal-content">
+        <FilePicker
+            class="user-avatar"
+            :src="data?.[userFields.AVATAR.name]"
+            :initial="displayedInitials"
+            :disabled="!!data?.[userFields.AVATAR.name] && isReadonly"
+            @on-input="onPickImage"
         />
-        <UserLastName
-            class="user-last-name"
-            :value="data?.[userFields.LAST_NAME.name]"
+        <UserEditForm
+            :edited-user="editedUser"
+            :readonly="isReadonly"
+            @on-submit="onUpdate"
         />
-      </div>
-      <UserEmail
-          class="user-email"
-          :href="data?.[userFields.EMAIL.name]"
-      />
-      <div class="button-wrapper">
-        <button
-            type="button"
-            @click="emit('ok', data?.[userFields.ID.name])"
-        >
-          Редактировать
-        </button>
+        <TextButton
+            class="edit-button"
+            :button-label="buttonLabel"
+            :title="buttonLabel"
+            is-dark
+            @click="setIsEdit(!isEdit)"
+        />
       </div>
     </template>
   </ModalTemplate>
@@ -62,8 +92,9 @@ const displayedInitials = computed(() => [
 
 <style scoped lang="scss">
 .user-avatar {
-  max-width: 320px;
-  margin: auto;
+  max-width: 160px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .user-email,
@@ -75,11 +106,13 @@ const displayedInitials = computed(() => [
 .user-name {
   align-items: center;
   flex-wrap: wrap;
-  gap: 5px;
 }
 
 .user-first-name,
 .user-last-name {
+  padding: 0;
+  color: unset;
+  font-weight: unset;
   @media #{$MOUSE_DEVICE} {
     &:hover {
       color: $COLOR_FONT_MAIN;
@@ -87,16 +120,45 @@ const displayedInitials = computed(() => [
   }
 }
 
-.button-wrapper {
-  display: flex;
-  justify-content: center;
-  padding: 15px 0;
+.edit-button {
+  align-self: center;
+}
 
-  button {
-    display: block;
-    padding: 5px 15px;
-    border-radius: 5px;
-    cursor: pointer;
+.fields {
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-bottom: 15px;
+  background: #f2f7ff;
+
+  > * {
+    &:not(&:first-of-type) {
+      padding: 0 15px;
+      width: auto;
+      display: flex;
+      flex: 1;
+    }
   }
 }
+
+.modal-content {
+  gap: 15px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: lighten($COLOR_BG_MAIN, 5%);
+  border-radius: 5px;
+  margin: auto;
+  max-width: 500px;
+  @media #{$BREAKPOINT} {
+    height: var(--vh);
+    max-width: unset;
+  }
+}
+
 </style>
