@@ -2,8 +2,10 @@
 import UserAvatar from "@/components/users/fields/UserAvatar.vue";
 import UserFirstName from "@/components/users/fields/UserFirstName.vue";
 import UserEmail from "@/components/users/fields/UserEmail.vue";
-import DeleteButton from "@/components/UI/DeleteButton.vue";
+import DeleteButton from "@/components/UI/buttons/DeleteButton.vue";
+
 import {computed} from "vue";
+import {getInitials} from "@/helpers/index.js";
 
 const props = defineProps({
   id: {
@@ -26,10 +28,9 @@ const props = defineProps({
 
 defineEmits(['onDelete', 'onShowDetails'])
 
-const displayedInitials = computed(() => [
-  props.lastName ? props.lastName[0].toUpperCase() : '',
-  props.firstName ? props.firstName[0].toUpperCase() : ''
-].join(' '))
+const displayedInitials = computed(() => {
+  return getInitials(props.firstName, props.lastName)?.join(' ')
+})
 </script>
 
 <template>
@@ -48,7 +49,7 @@ const displayedInitials = computed(() => [
       />
       <UserEmail
           class="user-field email"
-          :href="email"
+          :value="email"
       />
     </div>
     <DeleteButton
