@@ -7,21 +7,32 @@ import userFields from "@/helpers/userFields.js";
 import FormTemplate from "@/components/templates/FormTemplate.vue";
 import InputField from "@/components/UI/InputField.vue";
 
-import {useUserState} from "@/composables/state/useUserState.js";
+const props = defineProps({
+  editedUser: {
+    type: Object
+  },
+  readonly: {
+    type: Boolean,
+    default: null
+  },
+  buttonLabel: {
+    type: String,
+    default: 'Сохранить'
+  }
+})
 
 const emit = defineEmits(['onSubmit', 'onInput'])
 
-const {user, currentUserId} = useUserState()
-
-const editedUser = computed(() => {
-  return user(currentUserId.value).value
-})
-
 const state = reactive({
-  formFields: []
+  formFields: [],
+  oldDataJson: ''
 });
 
-watch(() => editedUser.value, value => {
+const formTitle = computed(() => {
+  return props.readonly ? 'Данные пользователя' : 'Редактировать пользователя'
+})
+
+watch(() => props.editedUser, value => {
   if (value) {
     state.formFields = [
       createFormField(userFields.FIRST_NAME),
@@ -30,43 +41,57 @@ watch(() => editedUser.value, value => {
       createFormField(userFields.PHONE),
       createFormField(userFields.ADDRESS),
     ]
+    setOldData()
   }
+}, {
+  immediate: true
+})
+
+const isChange = computed(() => {
+  return state.oldDataJson !== JSON.stringify(state.formFields.map(field => field.value))
 })
 
 function createFormField(field) {
   return {
     ...field,
-    value: editedUser.value[field.name],
+    value: props.editedUser[field.name],
     isValid: null,
     validationResult: []
   }
+}
+
+function setOldData() {
+  state.oldDataJson = JSON.stringify(state.formFields.map(field => field.value))
+}
+
+function submitHandler() {
+  const isSaved = onSubmit(state, emit)
+
+  if (isSaved) setOldData()
 }
 </script>
 
 <template>
   <FormTemplate
-      v-if="currentUserId"
-      form-title="Редактировать пользователя"
-      button-label="Сохранить"
-      @on-submit="onSubmit(state, emit)"
+      :form-title="formTitle"
+      :button-label="buttonLabel"
+      :show-button="!readonly && isChange"
+      @on-submit="submitHandler"
   >
     <template v-slot:content>
-      <label
+      <InputField
           v-for="field in state.formFields"
-          class="user-label"
-      >
-        <InputField
-            :type="field.type"
-            :name="field.name"
-            :placeholder="field?.label"
-            :value="field?.value"
-            :validation-result="field?.validationResult"
-            :is-valid="field?.isValid"
-            :validator="field.validator"
-            :debounce-timeout="200"
-            @on-input="e => onInput(e, state)"
-        />
-      </label>
+          :type="field.type"
+          :name="field.name"
+          :placeholder="field?.label"
+          :value="field?.value"
+          :validation-result="field?.validationResult"
+          :is-valid="field?.isValid"
+          :validator="field.validator"
+          :debounce-timeout="100"
+          :readonly="readonly"
+          @on-input="e => onInput(e, state)"
+      />
     </template>
   </FormTemplate>
 </template>
