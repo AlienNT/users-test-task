@@ -1,5 +1,5 @@
 <script setup>
-import TextButton from "@/components/UI/TextButton.vue";
+import TextButton from "@/components/UI/buttons/TextButton.vue";
 
 defineProps({
   formTitle: {
@@ -7,6 +7,10 @@ defineProps({
   },
   buttonLabel: {
     type: String
+  },
+  showButton: {
+    type: Boolean,
+    default: false
   }
 })
 defineEmits(['onSubmit'])
@@ -18,12 +22,14 @@ defineEmits(['onSubmit'])
       @submit.prevent="$emit('onSubmit')"
   >
     <div class="user-form-title">
-      {{formTitle}}
+      {{ formTitle }}
     </div>
     <slot name="content"/>
     <TextButton
+        v-if="showButton"
         type="submit"
         class="user-form__button"
+        :title="buttonLabel"
         :button-label="buttonLabel"
     />
   </form>
@@ -33,7 +39,7 @@ defineEmits(['onSubmit'])
 .user-form {
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  padding: 0 15px;
   gap: 5px;
 }
 
