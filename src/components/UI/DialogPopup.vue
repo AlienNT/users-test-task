@@ -1,6 +1,6 @@
 <script setup>
 import ModalTemplate from "@/components/templates/ModalTemplate.vue";
-import TextButton from "@/components/UI/TextButton.vue";
+import TextButton from "@/components/UI/buttons/TextButton.vue";
 import TextField from "@/components/UI/TextField.vue";
 
 defineProps({
@@ -40,10 +40,16 @@ const emit = defineEmits(['cancel', 'ok'])
 </template>
 <style lang="scss" scoped>
 .modal-field-wrapper {
+  max-width: 400px;
+  margin: 0 auto;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  gap: 20px;
 }
 
 .title {
