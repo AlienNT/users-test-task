@@ -19,6 +19,10 @@ const props = defineProps({
   debounceTimeout: {
     type: Number,
     default: null
+  },
+  readonly: {
+    type: Boolean,
+    default: null
   }
 })
 
@@ -57,10 +61,12 @@ function inputHandler(e, emitType) {
       :type="type"
       :placeholder="displayedPlaceholder"
       :value="value"
+      :readonly="readonly"
+      :disabled="readonly"
       @input="e => inputHandler(e, 'onInput')"
       @change="e => inputHandler(e, 'onChange')"
       @blur="e => $emit('onBlur', e.target.value)"
-      @focus="e => $emit('onFocus', e.target.value)"
+      @focus="e => !readonly && $emit('onFocus', e.target.value)"
   >
 </template>
 
@@ -69,7 +75,8 @@ label {
   display: flex;
 }
 
-input {
+input,
+.readonly-field {
   padding: 15px;
   border-radius: 5px;
   transition: .2s ease;
@@ -84,7 +91,11 @@ input {
       color: transparent;
     }
   }
+
+  background: white;
+
+  &[readonly] {
+    background: darken(white, 10%);
+  }
 }
-
-
 </style>
