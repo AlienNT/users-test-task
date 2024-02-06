@@ -34,5 +34,21 @@ export default {
     },
     AVATAR: {
         name: 'avatar',
-    }
+    },
+    PHONE: {
+        name: 'phone',
+        type: 'phone',
+        label: 'Телефон',
+        validator: (value) => [
+            !value || !!value?.match(/^[+]?(1\-|1\s|1|\d{3}\-|\d{3}\s|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/g) || 'некорректный формат номера'
+        ]
+    },
+    ADDRESS: {
+        name: 'address',
+        type: 'text',
+        label: 'Адрес',
+        validator: (value) => [
+            !value || value?.trim()?.length > 4 || 'слишком короткое значение',
+        ]
+    },
 }

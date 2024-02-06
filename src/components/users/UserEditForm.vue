@@ -6,6 +6,7 @@ import userFields from "@/helpers/userFields.js";
 
 import FormTemplate from "@/components/templates/FormTemplate.vue";
 import InputField from "@/components/UI/InputField.vue";
+
 import {useUserState} from "@/composables/state/useUserState.js";
 
 const emit = defineEmits(['onSubmit', 'onInput'])
@@ -21,12 +22,13 @@ const state = reactive({
 });
 
 watch(() => editedUser.value, value => {
-  console.log('editedUser.value', editedUser.value)
   if (value) {
     state.formFields = [
       createFormField(userFields.FIRST_NAME),
       createFormField(userFields.LAST_NAME),
       createFormField(userFields.EMAIL),
+      createFormField(userFields.PHONE),
+      createFormField(userFields.ADDRESS),
     ]
   }
 })
@@ -61,6 +63,7 @@ function createFormField(field) {
             :validation-result="field?.validationResult"
             :is-valid="field?.isValid"
             :validator="field.validator"
+            :debounce-timeout="200"
             @on-input="e => onInput(e, state)"
         />
       </label>
