@@ -23,7 +23,10 @@ export function useModal() {
 
             }), document.documentElement)
 
-        }).finally(() => setIsShow(false))
+        }).finally(() => {
+            setIsShow(false)
+            setTimeout(() => render(null, document.documentElement), 200)
+        })
     }
 
     return {
