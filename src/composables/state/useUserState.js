@@ -2,7 +2,8 @@ import {computed, reactive} from "vue";
 
 const state = reactive({
     users: [],
-    currentUserId: null
+    currentUserId: null,
+    isEdit: false
 })
 
 export function useUserState() {
@@ -42,6 +43,14 @@ export function useUserState() {
         state.currentUserId = id
     }
 
+    const isEdit = computed(() => {
+        return state.isEdit
+    })
+
+    function setIsEdit(value) {
+        state.isEdit = value
+    }
+
     return {
         users,
         setUsers,
@@ -51,5 +60,7 @@ export function useUserState() {
         user,
         currentUserId,
         setUserId,
+        isEdit,
+        setIsEdit
     }
 }
