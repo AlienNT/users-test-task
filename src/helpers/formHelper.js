@@ -42,4 +42,6 @@ export function onSubmit(state, emit) {
     const isValidForm = validate(state.formFields)
 
     if (isValidForm) emit('onSubmit', createFormData(state.formFields))
+
+    return isValidForm
 }
