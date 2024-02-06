@@ -4,6 +4,7 @@ import {reactive} from "vue";
 
 import InputField from "@/components/UI/InputField.vue";
 import FormTemplate from "@/components/templates/FormTemplate.vue";
+
 import {createFormField, onInput, onSubmit} from "@/helpers/formHelper.js";
 
 const emit = defineEmits(['onSubmit', 'onInput'])
@@ -36,6 +37,7 @@ const state = reactive({
             :validation-result="field?.validationResult"
             :is-valid="field?.isValid"
             :validator="field.validator"
+            :debounce-timeout="200"
             @on-input="e => onInput(e,state)"
         />
       </label>
