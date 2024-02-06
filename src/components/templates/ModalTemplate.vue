@@ -1,25 +1,51 @@
 <script setup>
 import {useModal} from "@/composables/useModal.js";
+import {onBeforeUnmount, onMounted} from "vue";
+import keyCodes from "@/helpers/keyCodes.js";
+
+import CloseButton from "@/components/UI/buttons/CloseButton.vue";
 
 const emit = defineEmits(['ok', 'cancel'])
 
 const {isShow} = useModal()
+
+onMounted(() => {
+  window.addEventListener('keydown', eventHandler)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', eventHandler)
+})
+
+function eventHandler(e) {
+  if (!isShow.value) return
+
+  switch (e.code) {
+    case keyCodes.ENTER: {
+      return emit('ok')
+    }
+    case keyCodes.ESCAPE: {
+      return emit('cancel')
+    }
+  }
+}
 </script>
 
 <template>
-  <transition
-      name="fade"
-      appear
-  >
+  <transition name="fade" appear>
     <div
         v-if="isShow"
         class="modal"
         @click.self="emit('cancel')"
     >
-      <div class="modal-wrapper container">
-        <div class="modal-content">
-          <slot name="content"/>
-        </div>
+      <div
+          class="modal-wrapper container"
+          @click.self="emit('cancel')"
+      >
+        <CloseButton
+            class="close-button"
+            @on-click="emit('cancel')"
+        />
+        <slot name="content"/>
       </div>
     </div>
   </transition>
@@ -27,6 +53,7 @@ const {isShow} = useModal()
 
 <style scoped lang="scss">
 @import "../../assets/css/transitions";
+
 .modal {
   transition: .2s ease;
   display: flex;
@@ -42,17 +69,23 @@ const {isShow} = useModal()
 
 .modal-wrapper {
   margin: auto;
-  max-width: 500px;
+  padding: 15px;
+  max-height: var(--vh);
+  overflow: auto;
+  @media #{$BREAKPOINT} {
+    padding: 0;
+  }
 }
 
-.modal-content {
-  background: $COLOR_MAIN_LIGHT;
-  min-width: 280px;
-  min-height: 160px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  padding: 25px;
-  display: flex;
-  flex-direction: column;
+
+.close-button {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+
+  @media #{$BREAKPOINT} {
+    top: 10px;
+    right: 10px;
+  }
 }
 </style>
