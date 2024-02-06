@@ -2,46 +2,27 @@
 import UserList from "@/components/users/UserList.vue";
 import UserForm from "@/components/users/UserForm.vue";
 import VInput from "@/components/UI/VInput.vue";
+import AddButton from "@/components/UI/buttons/AddButton.vue";
 
 import {useUserRequest} from "@/composables/api/useUserRequest.js";
 import {useUserState} from "@/composables/state/useUserState.js";
-
-import {computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, watch} from "vue";
-import userFields from "@/helpers/userFields.js";
 import {useModal} from "@/composables/useModal.js";
-import AddButton from "@/components/UI/AddButton.vue";
-import UserEditForm from "@/components/users/UserEditForm.vue";
-import {debounce} from "@/helpers/index.js";
+
+import {computed, defineAsyncComponent, onMounted, reactive, ref, watch} from "vue";
+import userFields from "@/helpers/userFields.js";
 
 const {fetchUsers, deleteUser, createUser, patchUser} = useUserRequest()
 const {createModal, isShow} = useModal()
-const {users, user, setUserId, currentUserId} = useUserState()
+const {users, user, setUserId, currentUserId, setIsEdit} = useUserState()
 
 const state = reactive({
   searchFilter: null,
   sidebarHeight: null
 })
 
-const sidebar = ref(null)
-
 onMounted(() => {
   fetchUsers()
-  setSidebarSize()
-
-  window.addEventListener('resize', setSidebarSize)
 })
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', setSidebarSize)
-})
-
-watch(() => state.sidebarHeight, value => {
-  document.documentElement.style.setProperty('--sidebar-height', `${value}px`)
-})
-
-function setSidebarSize() {
-  state.sidebarHeight = sidebar.value?.offsetHeight
-}
 
 async function onDelete(e) {
   const isDelete = await createModal({
@@ -71,13 +52,8 @@ function getFields(fields, item) {
   return fields.map(field => item[field])
 }
 
-const tempFilter = ref(null)
-
-const inputTimer = debounce(() => state.searchFilter = tempFilter.value, 1000)
-
 function onFilter(e) {
-  tempFilter.value = e
-  inputTimer()
+  state.searchFilter = e
 }
 
 function onSubmit(e) {
@@ -90,17 +66,19 @@ function onUpdate(e) {
 
 async function onShowUserModal(id) {
   if (isShow.value) return
+  setUserId(id)
 
   const isEdit = await createModal({
     component: defineAsyncComponent(() => import('../components/users/UserModal.vue')),
     data: user(id).value
   })
 
-  if (isEdit) setUserId(id)
+  if (isEdit) setIsEdit(true)
 
 }
 
 const isShowForm = ref(false)
+
 </script>
 
 <template>
@@ -114,12 +92,7 @@ const isShowForm = ref(false)
           ref="sidebar"
       >
         <UserForm
-            v-show="!currentUserId"
             @on-submit="onSubmit"
-        />
-        <UserEditForm
-            v-show="currentUserId"
-            @on-submit="onUpdate"
         />
       </div>
       <div class="users-page__viewport">
@@ -127,6 +100,7 @@ const isShowForm = ref(false)
           <VInput
               placeholder="Поиск"
               :value="state.searchFilter"
+              :debounce-timeout="600"
               @on-input="onFilter"
           />
         </label>
@@ -155,7 +129,7 @@ const isShowForm = ref(false)
     position: relative;
     display: flex;
     height: 100%;
-    max-height: 100vh;
+    max-height: var(--vh);
     flex-wrap: wrap;
 
     @media #{$BREAKPOINT} {
@@ -166,7 +140,7 @@ const isShowForm = ref(false)
 }
 
 .users-page {
-  height: 100vh;
+  height: var(--vh);
 }
 
 .users-page__sidebar {
@@ -174,6 +148,7 @@ const isShowForm = ref(false)
   background: $COLOR_BG_MAIN;
   z-index: 3;
   flex: 1 1 40%;
+  padding: 15px 0;
 
   @media #{$BREAKPOINT} {
     position: absolute;
@@ -192,7 +167,8 @@ const isShowForm = ref(false)
 .users-page__viewport {
   flex: 1 1 60%;
   height: 100%;
-  overflow-y: auto;
+  overflow-y: scroll;
+  background: lighten($COLOR_BG_MAIN, 4%);
 }
 
 .users-search {
