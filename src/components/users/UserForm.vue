@@ -22,25 +22,22 @@ const state = reactive({
   <FormTemplate
       form-title="Добавить пользователя"
       button-label="Добавить"
+      show-button
       @on-submit="onSubmit(state, emit)"
   >
     <template v-slot:content>
-      <label
+      <InputField
           v-for="field in state.formFields"
-          class="user-label"
-      >
-        <InputField
-            :type="field.type"
-            :name="field.name"
-            :placeholder="field?.label"
-            :value="field?.value"
-            :validation-result="field?.validationResult"
-            :is-valid="field?.isValid"
-            :validator="field.validator"
-            :debounce-timeout="200"
-            @on-input="e => onInput(e,state)"
-        />
-      </label>
+          :type="field.type"
+          :name="field.name"
+          :placeholder="field?.label"
+          :value="field?.value"
+          :validation-result="field?.validationResult"
+          :is-valid="field?.isValid"
+          :validator="field.validator"
+          :debounce-timeout="200"
+          @on-input="e => onInput(e,state)"
+      />
     </template>
   </FormTemplate>
 </template>
