@@ -29,6 +29,10 @@ const props = defineProps({
   },
   debounceTimeout: {
     type: Number
+  },
+  readonly: {
+    type: Boolean,
+    default: null
   }
 })
 
@@ -51,14 +55,12 @@ function sendInputValue(e) {
 
   emit('onInput', {
     field: props.name,
-    value: e,
+    value: e || null,
     validationResult: props.validator(e)
   })
 }
 
 watch(() => props.validationResult, () => isChanged.value = true)
-
-
 </script>
 
 <template>
@@ -79,6 +81,7 @@ watch(() => props.validationResult, () => isChanged.value = true)
         :value="value"
         :placeholder="placeholder"
         :debounce-timeout="debounceTimeout"
+        :readonly="readonly"
         @on-input="sendInputValue"
         @on-blur="sendInputValue"
         @on-change="sendInputValue"
@@ -95,6 +98,7 @@ watch(() => props.validationResult, () => isChanged.value = true)
 
 <style scoped lang="scss">
 @import "../../assets/css/transitions";
+
 label {
   position: relative;
   padding-bottom: 25px;
@@ -146,5 +150,9 @@ input {
   top: 0;
   background: lighten($COLOR_FONT_MAIN, 10%);
   color: $COLOR_MAIN_LIGHT;
+
+  [readonly] & {
+    background: lighten($COLOR_FONT_MAIN, 20%);
+  }
 }
 </style>
