@@ -19,7 +19,6 @@ export function useUserRequest() {
 
     async function deleteUser(id) {
         return await apiRequest('delete', '/users' + id).then(({status}) => {
-            console.log('delete ', status)
             if (status === 204) {
                 removeUser(id)
             }
@@ -33,13 +32,11 @@ export function useUserRequest() {
             }
         })
     }
+
     async function patchUser(id, data) {
-        console.log('id', id)
-        console.log('data', data)
         if (!id) return
+
         return await apiRequest('patch', `/users/${id}`, data).then(({data, status}) => {
-            console.log('data', data)
-            console.log('status', status)
             if (status === 200) {
                 updateUser({id, ...data})
             }
