@@ -1,5 +1,6 @@
 <script setup>
-import {computed} from "vue";
+import {computed, reactive} from "vue";
+import {debounce} from "@/helpers/index.js";
 
 const props = defineProps({
   type: {
@@ -15,12 +16,17 @@ const props = defineProps({
   value: {
     type: [String, Number]
   },
+  debounceTimeout: {
+    type: Number,
+    default: null
+  }
 })
 
-defineEmits([
+const emit = defineEmits([
   'onInput',
   'onChange',
-  'onBlur'
+  'onBlur',
+  'onFocus'
 ])
 
 const displayedPlaceholder = computed(() => {
@@ -29,6 +35,21 @@ const displayedPlaceholder = computed(() => {
       null
 })
 
+const state = reactive({
+  editedValue: null,
+  emitType: null
+})
+
+const debounceInput = debounce(() => {
+  emit(state.emitType, state.editedValue)
+}, props.debounceTimeout)
+
+function inputHandler(e, emitType) {
+  state.editedValue = e.target.value
+  state.emitType = emitType
+
+  debounceInput()
+}
 </script>
 
 <template>
@@ -36,9 +57,10 @@ const displayedPlaceholder = computed(() => {
       :type="type"
       :placeholder="displayedPlaceholder"
       :value="value"
-      @input="e => $emit('onInput', e.target.value)"
-      @change="e => $emit('onChange', e.target.value)"
+      @input="e => inputHandler(e, 'onInput')"
+      @change="e => inputHandler(e, 'onChange')"
       @blur="e => $emit('onBlur', e.target.value)"
+      @focus="e => $emit('onFocus', e.target.value)"
   >
 </template>
 
@@ -48,7 +70,7 @@ label {
 }
 
 input {
-  padding: 10px 15px;
+  padding: 15px;
   border-radius: 5px;
   transition: .2s ease;
 
