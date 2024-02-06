@@ -7,10 +7,8 @@ export default {
         type: 'email',
         label: 'Почта',
         validator: (value) => {
-            console.log('email value', value)
             return [
                 !!value?.length || 'поле обязательно к заполнению',
-                typeof value === "string" || 'поле должно быть строкой',
                 !!value?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g) || 'некорректный формат почты'
             ]
         }
