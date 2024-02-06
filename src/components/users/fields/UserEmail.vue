@@ -1,21 +1,20 @@
 <script setup>
 defineProps({
-  href: {
+  value: {
     type: String
   },
-  value: {
+  label: {
     type: String
   }
 })
 </script>
 
 <template>
-  <a
-      :href="'mailto:' + href"
-      class="user-list-email"
-  >
-    {{ value || href }}
-  </a>
+  <div class="user-list-email">
+    <a :href="'mailto:' + value">
+      {{ label || value }}
+    </a>
+  </div>
 </template>
 
 <style scoped lang="scss">
