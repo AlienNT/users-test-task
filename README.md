@@ -1,3 +1,24 @@
-# Vue 3 + Vite
+# User Test Task
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+
+Приложение отображает список пользователей из [API ReqRes](https://reqres.in/api/users)  и взаимодействует с ним
+___
+
+### Технологии
+> **Vue.js, SCSS, Java Script ES6, Axios**
+
+
+### Функционал
+
+___
+
+* Отображение списка пользователей
+* Фильтрация пользователей и динамическое обновление списка
+* Создание пользователя
+* Обновление пользователя с добавлением __*номера, фамилии, адреса и фотографии*__
+* Удаление пользователя
+* Валидация полей
+* Алаптивная верстка
+
+### Превью 
+> [users-test-task.onrender.com](https://users-test-task.onrender.com/)
