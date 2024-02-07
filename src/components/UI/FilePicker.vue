@@ -51,18 +51,22 @@ function onPick() {
       class="file-picker"
       :class="disabled && 'read-only'"
   >
-    <div class="file-preview">
-      <VImage
-          :src="src"
-          :initial="initial"
-      />
+    <div class="wrapper">
+      <div class="inner">
+        <div class="file-preview">
+          <VImage
+              :src="src"
+              :initial="initial"
+          />
+        </div>
+        <label class="file-pick-label">
+          <IconButton
+              :icon="icons.UPLOAD"
+              @on-click="onClick"
+          />
+        </label>
+      </div>
     </div>
-    <label class="file-pick-label">
-      <IconButton
-          :icon="icons.UPLOAD"
-          @on-click="onClick"
-      />
-    </label>
   </div>
 </template>
 
@@ -71,6 +75,23 @@ function onPick() {
   position: relative;
   border-radius: 50%;
   overflow: hidden;
+  width: 0;
+  height: 0;
+  padding-left: 100%;
+  padding-top: 100%;
+}
+
+.wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+}
+
+.inner {
+  position: relative;
   padding: 2px;
 }
 
@@ -90,7 +111,9 @@ function onPick() {
   transition: .2s ease;
 
   &:hover {
-    opacity: 1;
+    @media #{$MOUSE_DEVICE} {
+     opacity: 1;
+    }
   }
 
   .read-only & {

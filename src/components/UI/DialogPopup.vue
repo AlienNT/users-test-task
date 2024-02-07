@@ -17,22 +17,24 @@ const emit = defineEmits(['cancel', 'ok'])
       @ok="emit('ok')"
   >
     <template v-slot:content>
-      <div class="modal-field-wrapper">
-        <TextField
-            :value="data?.title"
-            class="title"
-        />
-        <div class="button-wrapper">
-          <TextButton
-              button-label="Удалить"
-              is-light
-              @on-click="emit('ok')"
+      <div class="modal-content container">
+        <div class="modal-field-wrapper">
+          <TextField
+              :value="data?.title"
+              class="title"
           />
-          <TextButton
-              button-label="Отменить"
-              is-dark
-              @on-click="emit('cancel')"
-          />
+          <div class="button-wrapper">
+            <TextButton
+                button-label="Удалить"
+                is-light
+                @on-click="emit('ok')"
+            />
+            <TextButton
+                button-label="Отменить"
+                is-dark
+                @on-click="emit('cancel')"
+            />
+          </div>
         </div>
       </div>
     </template>

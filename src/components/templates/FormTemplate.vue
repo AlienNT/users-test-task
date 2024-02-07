@@ -40,7 +40,6 @@ defineEmits(['onSubmit'])
   display: flex;
   flex-direction: column;
   padding: 0 15px;
-  gap: 5px;
 }
 
 .user-label {

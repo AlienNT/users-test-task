@@ -48,7 +48,7 @@ watch(() => props.editedUser, value => {
 })
 
 const isChange = computed(() => {
-  return state.oldDataJson !== JSON.stringify(state.formFields.map(field => field.value))
+  return state.oldDataJson !== getFieldsJSON(state.formFields)
 })
 
 function createFormField(field) {
@@ -61,7 +61,14 @@ function createFormField(field) {
 }
 
 function setOldData() {
-  state.oldDataJson = JSON.stringify(state.formFields.map(field => field.value))
+  state.oldDataJson = getFieldsJSON(state.formFields)
+}
+
+function getFieldsJSON(fields) {
+  const oldData = {}
+  fields.forEach(({value, name}) => oldData[name] = value || null)
+
+  return JSON.stringify(oldData)
 }
 
 function submitHandler() {

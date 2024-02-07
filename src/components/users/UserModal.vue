@@ -66,14 +66,17 @@ onBeforeUnmount(() => {
   >
     <template v-slot:content>
       <div class="modal-content">
-        <FilePicker
-            class="user-avatar"
-            :src="data?.[userFields.AVATAR.name]"
-            :initial="displayedInitials"
-            :disabled="!!data?.[userFields.AVATAR.name] && isReadonly"
-            @on-input="onPickImage"
-        />
+        <div class="user-avatar">
+          <FilePicker
+              class="user-avatar-picker"
+              :src="data?.[userFields.AVATAR.name]"
+              :initial="displayedInitials"
+              :disabled="!!data?.[userFields.AVATAR.name] && isReadonly"
+              @on-input="onPickImage"
+          />
+        </div>
         <UserEditForm
+            :key="isEdit"
             :edited-user="editedUser"
             :readonly="isReadonly"
             @on-submit="onUpdate"
@@ -158,6 +161,7 @@ onBeforeUnmount(() => {
   @media #{$BREAKPOINT} {
     height: var(--vh);
     max-width: unset;
+    overflow-y: scroll;
   }
 }
 

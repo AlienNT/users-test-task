@@ -68,7 +68,7 @@ watch(() => props.validationResult, () => isChanged.value = true)
       :class="errorClass"
       class="input-field-label"
   >
-    <transition name="fade" appear>
+    <transition name="fade">
       <span
           class="input-field-title"
           v-if="isFocus || value"
@@ -101,7 +101,7 @@ watch(() => props.validationResult, () => isChanged.value = true)
 
 label {
   position: relative;
-  padding-bottom: 25px;
+  padding-bottom: 35px;
   flex-direction: column;
 }
 
@@ -116,7 +116,7 @@ input {
   margin-top: 5px;
   transition: .2s ease;
   opacity: 0;
-  bottom: 5px;
+  bottom: 15px;
   right: 0;
   display: block;
   font-family: monospace;
@@ -137,6 +137,7 @@ input {
 }
 
 .input-field-title {
+  display: block;
   transition: .2s ease;
   position: absolute;
   left: 15px;
