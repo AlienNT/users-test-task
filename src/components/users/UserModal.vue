@@ -4,7 +4,6 @@ import {computed, onBeforeUnmount} from "vue";
 
 import ModalTemplate from "@/components/templates/ModalTemplate.vue";
 import UserEditForm from "@/components/users/UserEditForm.vue";
-import TextButton from "@/components/UI/buttons/TextButton.vue";
 import FilePicker from "@/components/UI/FilePicker.vue";
 
 import {getInitials} from "@/helpers/index.js";
@@ -37,17 +36,20 @@ const displayedInitials = computed(() => {
 })
 
 function onUpdate(e) {
-  patchUser(currentUserId.value, e).then(() => {
-    setIsEdit(null)
-  })
+  setIsEdit(null)
+  patchUser(currentUserId.value, e)
+}
+
+function onCancel() {
+  setIsEdit(false)
+}
+
+function onEdit() {
+  setIsEdit(true)
 }
 
 const isReadonly = computed(() => {
   return !isEdit.value
-})
-
-const buttonLabel = computed(() => {
-  return isEdit.value ? 'Отменить' : 'Редактировать'
 })
 
 function onPickImage(e) {
@@ -76,17 +78,13 @@ onBeforeUnmount(() => {
           />
         </div>
         <UserEditForm
-            :key="isEdit"
             :edited-user="editedUser"
             :readonly="isReadonly"
+            :show-buttons="isEdit"
+            :is-edit="isEdit"
             @on-submit="onUpdate"
-        />
-        <TextButton
-            class="edit-button"
-            :button-label="buttonLabel"
-            :title="buttonLabel"
-            is-dark
-            @click="setIsEdit(!isEdit)"
+            @on-cancel="onCancel"
+            @on-edit="onEdit"
         />
       </div>
     </template>
@@ -94,10 +92,12 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped lang="scss">
+@import "../../assets/css/transitions";
+
 .user-avatar {
   max-width: 160px;
-  margin: 0 auto;
   width: 100%;
+  margin: 0 auto 15px;
 }
 
 .user-email,
@@ -150,7 +150,6 @@ onBeforeUnmount(() => {
 }
 
 .modal-content {
-  gap: 15px;
   display: flex;
   flex-direction: column;
   padding: 20px;

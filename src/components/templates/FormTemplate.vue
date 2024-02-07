@@ -1,7 +1,9 @@
 <script setup>
 import TextButton from "@/components/UI/buttons/TextButton.vue";
+import {computed} from "vue";
+import UserFormTitle from "@/components/users/UserFormTitle.vue";
 
-defineProps({
+const props = defineProps({
   formTitle: {
     type: String
   },
@@ -11,9 +13,25 @@ defineProps({
   showButton: {
     type: Boolean,
     default: false
+  },
+  showCancelButton: {
+    type: Boolean,
+    default: false
+  },
+  showButtons: {
+    type: Boolean,
+    default: true
+  },
+  isEdit: {
+    type: Boolean,
+    default: true
   }
 })
-defineEmits(['onSubmit'])
+defineEmits(['onSubmit', 'onCancel', 'onEdit'])
+
+const cancelButtonLabel = computed(() => {
+  return props.isEdit ? 'Отменить' : 'Редактировать'
+})
 </script>
 
 <template>
@@ -21,21 +39,38 @@ defineEmits(['onSubmit'])
       class="user-form"
       @submit.prevent="$emit('onSubmit')"
   >
-    <div class="user-form-title">
-      {{ formTitle }}
-    </div>
-    <slot name="content"/>
-    <TextButton
-        v-if="showButton"
-        type="submit"
-        class="user-form__button"
-        :title="buttonLabel"
-        :button-label="buttonLabel"
+    <UserFormTitle
+        :value="formTitle"
     />
+    <slot name="content"/>
+    <div class="buttons-wrapper" v-if="showButtons">
+      <transition name="fade">
+        <TextButton
+            v-if="showButton"
+            :title="buttonLabel"
+            :button-label="buttonLabel"
+            class="user-form__button"
+            type="submit"
+        />
+      </transition>
+      <transition name="fade">
+        <TextButton
+            v-if="showCancelButton"
+            :title="cancelButtonLabel"
+            :button-label="cancelButtonLabel"
+            is-dark
+            class="user-form__cancel-button"
+            @on-click="$emit(isEdit ? 'onCancel': 'onEdit')"
+        />
+      </transition>
+      <input type="submit">
+    </div>
   </form>
 </template>
 
 <style scoped lang="scss">
+@import "../../assets/css/transitions";
+
 .user-form {
   display: flex;
   flex-direction: column;
@@ -49,11 +84,15 @@ defineEmits(['onSubmit'])
   }
 }
 
+.buttons-wrapper {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+}
+
 .user-form__button {
   flex: none;
   width: fit-content;
-  margin: auto;
-  padding: 5px 15px;
   border-radius: 5px;
   background: $COLOR_FONT_MAIN_LIGHT;
   color: $COLOR_MAIN_LIGHT;
@@ -62,18 +101,15 @@ defineEmits(['onSubmit'])
   cursor: pointer;
   transition: .2s ease;
   @media #{$MOUSE_DEVICE} {
-    &:hover {
-      background: darken($COLOR_FONT_MAIN_LIGHT, 10%);
+    &:not([disabled]) {
+      &:hover {
+        background: darken($COLOR_FONT_MAIN_LIGHT, 10%);
+      }
     }
   }
 }
 
-.user-form-title {
-  font-size: 16px;
-  font-family: $FONT_MAIN;
-  font-weight: 700;
-  color: lighten($COLOR_FONT_MAIN, 15%);
-  text-align: center;
-  margin-bottom: 10px;
+input[type=submit] {
+  display: none;
 }
 </style>

@@ -1,6 +1,8 @@
 <script setup>
-import {computed, ref, watch} from "vue";
+import {computed, ref} from "vue";
+
 import VInput from "@/components/UI/VInput.vue";
+import FieldTitle from "@/components/UI/FieldTitle.vue";
 
 const props = defineProps({
   value: {
@@ -45,8 +47,11 @@ const errorMessage = computed(() => {
   return props.validationResult?.find(res => typeof res !== "boolean")
 })
 
-const errorClass = computed(() => {
-  return isChanged.value && !props.isValid && 'error'
+const className = computed(() => {
+  return [
+    !props.isValid && props.isValid !== null && 'error',
+    props.isValid && 'valid'
+  ].join(' ')
 })
 
 function sendInputValue(e) {
@@ -54,27 +59,22 @@ function sendInputValue(e) {
   isFocus.value = false
 
   emit('onInput', {
-    field: props.name,
+    name: props.name,
     value: e || null,
-    validationResult: props.validator(e)
   })
 }
-
-watch(() => props.validationResult, () => isChanged.value = true)
 </script>
 
 <template>
   <label
-      :class="errorClass"
+      :class="className"
       class="input-field-label"
   >
     <transition name="fade">
-      <span
-          class="input-field-title"
+      <FieldTitle
           v-if="isFocus || value"
-      >
-      {{ placeholder }}
-    </span>
+          :value="placeholder"
+      />
     </transition>
     <VInput
         :type="type"
@@ -83,8 +83,6 @@ watch(() => props.validationResult, () => isChanged.value = true)
         :debounce-timeout="debounceTimeout"
         :readonly="readonly"
         @on-input="sendInputValue"
-        @on-blur="sendInputValue"
-        @on-change="sendInputValue"
         @on-focus="isFocus = true"
     />
     <span
@@ -106,8 +104,18 @@ label {
 }
 
 input {
+  transition: .2s ease;
+
+  &:not([readonly]) {
+    box-shadow: 0 2px 0 1px $COLOR_FONT_MAIN_LIGHT;
+  }
+
   .error & {
     box-shadow: 0 2px 0 1px $COLOR_FONT_ERROR;
+  }
+
+  .valid & {
+    box-shadow: 0 2px 0 1px $COLOR_FIELD_VALID;
   }
 }
 
@@ -134,26 +142,5 @@ input {
 
 .input-field-label {
   position: relative;
-}
-
-.input-field-title {
-  display: block;
-  transition: .2s ease;
-  position: absolute;
-  left: 15px;
-  transform: translateY(-50%);
-  font-size: 12px;
-  border-radius: 5px;
-  padding: 3px 6px;
-  letter-spacing: 1px;
-  font-family: $FONT_MAIN;
-  font-weight: 300;
-  top: 0;
-  background: lighten($COLOR_FONT_MAIN, 10%);
-  color: $COLOR_MAIN_LIGHT;
-
-  [readonly] & {
-    background: lighten($COLOR_FONT_MAIN, 20%);
-  }
 }
 </style>

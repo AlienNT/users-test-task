@@ -46,7 +46,7 @@ const classList = computed(() => [
 
 <style scoped lang="scss">
 .text-button {
-  padding: 5px 15px;
+  padding: 10px 20px;
   display: block;
   border-radius: 5px;
   transition: .2s ease;
@@ -67,12 +67,12 @@ const classList = computed(() => [
 }
 
 .dark {
-  background: $COLOR_BG_MAIN;
+  background: darken($COLOR_BG_MAIN, 5%);
   color: $COLOR_MAIN_LIGHT;
 
   @media #{$MOUSE_DEVICE} {
     &:hover {
-      background: lighten($COLOR_BG_MAIN, 10%);
+      background: darken($COLOR_BG_MAIN, 8%);
     }
   }
 }

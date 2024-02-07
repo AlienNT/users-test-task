@@ -13,7 +13,7 @@ import userFields from "@/helpers/userFields.js";
 
 const {fetchUsers, deleteUser, createUser, patchUser} = useUserRequest()
 const {createModal, isShow} = useModal()
-const {users, user, setUserId, currentUserId, setIsEdit} = useUserState()
+const {users, currentUserId, user, setUserId, setIsEdit} = useUserState()
 
 const state = reactive({
   searchFilter: null,

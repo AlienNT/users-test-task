@@ -95,7 +95,7 @@ input,
   background: white;
 
   &[readonly] {
-    background: darken(white, 10%);
+    background: darken(white, 15%);
   }
 }
 </style>
