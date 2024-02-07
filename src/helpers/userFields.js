@@ -38,7 +38,7 @@ export default {
         type: 'phone',
         label: 'Телефон',
         validator: (value) => [
-            !value || !!value?.match(/^[0-9]\d{9,11}$/) || 'некорректный формат номера'
+            !value || !!value?.match(/^[0-9]\d{8,11}$/) || 'некорректный формат номера'
         ]
     },
     ADDRESS: {

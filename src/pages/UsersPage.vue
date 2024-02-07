@@ -8,7 +8,7 @@ import {useUserRequest} from "@/composables/api/useUserRequest.js";
 import {useUserState} from "@/composables/state/useUserState.js";
 import {useModal} from "@/composables/useModal.js";
 
-import {computed, defineAsyncComponent, onMounted, reactive, ref, watch} from "vue";
+import {computed, defineAsyncComponent, onMounted, reactive} from "vue";
 import userFields from "@/helpers/userFields.js";
 
 const {fetchUsers, deleteUser, createUser, patchUser} = useUserRequest()
@@ -17,7 +17,8 @@ const {users, user, setUserId, currentUserId, setIsEdit} = useUserState()
 
 const state = reactive({
   searchFilter: null,
-  sidebarHeight: null
+  sidebarHeight: null,
+  isShowForm: false
 })
 
 onMounted(() => {
@@ -57,7 +58,7 @@ function onFilter(e) {
 }
 
 function onSubmit(e) {
-  createUser(e)
+  createUser(e).then(() => state.isShowForm = false)
 }
 
 function onUpdate(e) {
@@ -77,14 +78,12 @@ async function onShowUserModal(id) {
 
 }
 
-const isShowForm = ref(false)
-
 </script>
 
 <template>
   <div
       class="users-page"
-      :class="isShowForm && 'show'"
+      :class="state.isShowForm && 'show'"
   >
     <div class="container">
       <div
@@ -92,6 +91,7 @@ const isShowForm = ref(false)
           ref="sidebar"
       >
         <UserForm
+            :key="state.isShowForm"
             @on-submit="onSubmit"
         />
       </div>
@@ -115,8 +115,8 @@ const isShowForm = ref(false)
             :width="60"
             :height="60"
             class="add-button"
-            :class="isShowForm && 'active'"
-            @on-click="isShowForm = !isShowForm"
+            :class="state.isShowForm && 'active'"
+            @on-click="state.isShowForm = !state.isShowForm"
         />
       </div>
     </div>
