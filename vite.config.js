@@ -4,7 +4,7 @@ import autoprefixer from "autoprefixer";
 import {fileURLToPath, URL} from "node:url";
 
 export default defineConfig(({command}) => {
-    const base = command === 'build' ? import.meta.env.BASE || '/users-test-task/' : '/'
+    const base = command === 'build' ? import.meta.env.BASE_URL || '/users-test-task/' : '/'
     return {
         plugins: [vue()],
         css: {
