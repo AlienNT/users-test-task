@@ -1,10 +1,11 @@
-import {defineConfig} from 'vite'
+import {defineConfig, loadEnv} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import autoprefixer from "autoprefixer";
 import {fileURLToPath, URL} from "node:url";
 
+const env = loadEnv('all', './')
 export default defineConfig(({command}) => {
-    const base = command === 'build' ? import.meta.env.BASE_URL || '/users-test-task/' : '/'
+    const base = command === 'build' ? env?.VITE_BASE_URL || '/users-test-task/' : '/'
     return {
         plugins: [vue()],
         css: {
