@@ -1,4 +1,4 @@
-const iconPath = '/images/icons/'
+const iconPath = (import.meta.env.BASE_URL || '') + 'images/icons/'
 export default {
     ADD: iconPath + 'add-circle-svgrepo-com.svg',
     DELETE: iconPath + 'cross-square-svgrepo-com.svg',
